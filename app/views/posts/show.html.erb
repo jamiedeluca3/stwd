@@ -1,0 +1,50 @@
+<p>
+  <b>Title:</b>
+  <%= @post.title %>
+</p>
+
+<p>
+  <b>Url:</b>
+  <%= @post.url %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%= @post.description %>
+</p>
+
+<%= render 'shared/errors', obj: @comment %>
+
+<% if logged_in? %>
+  <%= form_for [@post, @comment] do |f| %>
+    <div class='control-group'>
+      <%= f.label :body, "Leave a comment" %>
+      <%= f.text_area :body, rows: 4, class: 'span6' %>
+    </div>
+    <%= f.submit "Create comment", class: "btn btn-primary" %>
+  <% end %>
+<% end %>
+
+<h5>Comments:</h5>
+<% @post.comments.each do |comment| %>
+  <div class='row'>
+    <div class='span0 well text-center'>
+      <%= link_to vote_post_comment_path(comment, vote: true), method: 'post' do %>
+        <i class="icon-arrow-up"></i>
+      <% end %>
+      <br/>
+       votes
+      <br/>
+      <%= link_to vote_post_comment_path(comment, vote: false), method: 'post' do %>
+        <i class="icon-arrow-down"></i>
+      <% end %>
+    </div>
+    <div class='well span8'
+      <em>"<%= comment.body %>"</em>
+      on <%= link_to comment.post.title, post_path(comment.post) %>
+      </br></br>
+      <span class="quiet">by</span> <%= link_to comment.user.username %>
+      <small> at <%= display_datetime(comment.created_at) %></small>
+    </div>
+  </div>
+<% end %>
